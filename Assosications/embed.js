@@ -9,16 +9,6 @@ mongoose.connect("mongodb://localhost:27017/blog_demo",
     }
 );
 
-
-// USER - email, name
-var userSchema = new mongoose.Schema({
-    email: String,
-    name: String
-});
-
-var User = mongoose.model("User", userSchema);
-
-
 // POST - title, content
 var postSchema = new mongoose.Schema({
     title: String,
@@ -27,12 +17,24 @@ var postSchema = new mongoose.Schema({
 
 var Post = mongoose.model("Post", postSchema);
 
-
-
-var newUser = new User({
-    email: "charlie@brown.edu",
-    name: "Chalie Brown"
+// USER - email, name
+var userSchema = new mongoose.Schema({
+    email: String,
+    name: String,
+    posts: [postSchema]
 });
+
+var User = mongoose.model("User", userSchema);
+
+// var newUser = new User({
+//     email: "hermione@hogwarts.edu",
+//     name: "Hermione Granger"
+// });
+
+// newUser.posts.push({
+//     title: "How to brew polyjuice potion",
+//     content: "Just kidding. Go to potions class to learn it!"
+// });
 
 // newUser.save((err, user) => {
 //     if (err) {
@@ -42,15 +44,34 @@ var newUser = new User({
 //     }
 // });
 
-var newPost = new Post({
-    title: "Reflections on Apples",
-    content: "They are delicious"
-});
+// var newPost = new Post({
+//     title: "Reflections on Apples",
+//     content: "They are delicious"
+// });
 
-newPost.save((err, post) => {
+// newPost.save((err, post) => {
+//     if (err) {
+//         console.log(err);
+//     } else {
+//         console.log(post);
+//     }
+// });
+
+User.findOne({name: "Hermione Granger"}, (err, user) => {
     if (err) {
         console.log(err);
     } else {
-        console.log(post);
+        user.posts.push({
+            title: "3 things I really hate",
+            content: "Voldemort. Voldemort. Voldemort"
+        });
+
+        user.save((err, user) => {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(user);
+            }
+        });
     }
 });
